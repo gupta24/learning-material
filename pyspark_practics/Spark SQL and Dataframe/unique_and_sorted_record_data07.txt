@@ -1,0 +1,34 @@
+# Unique records in Dataframe :
+	Syntax:
+	  - dataframe.distinct().show()
+
+	ex :
+	  - df.distinct().show()
+	  - df.select('id', 'name').dictinct().show()
+
+
+
+
+# Drop duplicate records in Dataframe :
+	Syntax:
+	  - dataframe.drop_duplicates('list_of_column_name').show()
+
+	ex :
+	  - df.drop_duplicates(['id', 'name', 'salary']).show()
+
+
+
+
+# Sorted records in Dataframe :
+	Syntax:
+	  - dataframe.sort('column_name').show()
+	  - dataframe.sort(col('column_name1').desc/asc , col('column_name2').desc/asc).show()
+
+
+	ex :
+	  - df.sort('id').show()
+	  - df.sort(col('id').desc, col('salary').asc).show()
+
+
+
+

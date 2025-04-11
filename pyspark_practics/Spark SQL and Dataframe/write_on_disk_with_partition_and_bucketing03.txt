@@ -1,0 +1,83 @@
+# Write the Dataframe :
+	Syntax:
+	  - sparksession.write.format(---)\
+		              .option("key", "value")\
+		              .schema(----)\
+			      .mode(----)\
+		              .save(---)
+
+	
+        disc : 
+	  - format(optional) => data file format like (csv, json, jdbc/odbc, Table, parquet{default if not use format})
+	  - mode(optional)   => add mode like(append, overwrite, ignore, etc.)
+	  - option(optional) => like (inferschema, header)
+	  - schema(optional) => manual schema can pass
+	  - save	     => path where our data will be saved
+
+
+
+	ex :
+	  - spark.writw.format("csv")\
+		       .mode("overwrite")\
+		       .option("header", "true")\
+		       .save("c:\user\download\data.csv")
+
+
+	About mode option :
+	  - Append : add the new data into existing file path, otherwise create new file
+	  - Overwrite : overwrite the same file data with new data if file is existing on path and delete old data
+	  - errorIfExists : through the error if same file already existing on path
+	  - ignore : ignore the new file data if same file already existing on path
+
+
+	
+
+# Data Partitioning and Bucketing :
+	Syntax:
+	  - sparksession.write.format(---)\
+			      .mode(----)\
+		              .option("key", "value")\
+		              .schema(----)\
+			      .partitionBy('column_name')\
+			      .bucketBy('total_no_bucket', 'column_name')\
+		              .save(---)
+
+	
+        disc : 
+	  - format(optional) => data file format like (csv, json, jdbc/odbc, Table, parquet{default if not use format})
+	  - mode(optional)   => add mode like(append, overwrite, ignore, etc.)
+	  - option(optional) => like (inferschema, header)
+	  - schema(optional) => manual schema can pass
+	  - partitionBy(optional) =>
+	  - bucketBy(optional) => 
+	  - save	     => path where our data will be saved
+
+
+
+	ex :
+	  - spark.writw.format("csv")\
+		       .mode("overwrite")\
+		       .option("header", "true")\
+		       .partitionBy('id')\
+		       .bucketBy('3', 'id')\
+		       .save("c:\user\download\data.csv")
+	   - Note : Use any one partionBy or bucketBy in both of them
+
+
+	
+	NOTE :
+	  - df.repartition('no of partition') : used for make the data partition at cluster level for data processing on chunk.
+	  - partitionBy('column name') : used for make the data partition at disk level for write the data on disk based on given column
+					 which have mostly similar data.
+          - bucketBy('no of bucket', 'column name') : used for make the no of buckets similar to partitionBy but use when data is
+						      random not similar on given column. and it is save the bucket by using
+						      saveAsTable('any name of the table') method
+
+	Reference link :
+	  - https://medium.com/@diehardankush/what-all-about-bucketing-and-partitioning-in-spark-bc669441db63
+
+
+
+
+
+

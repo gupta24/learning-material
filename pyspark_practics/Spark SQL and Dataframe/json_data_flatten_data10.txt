@@ -1,0 +1,29 @@
+# Read Json in Dataframe and Flatten :
+	disc : 
+	  - Some time we required to flatten the json data for apply operation on json data.
+	  - flatten the json data where explode and explode_outer parameter are used when we want to convert the array data
+	    into struct for easy access.
+          - here different b/w explode (use when column data not having any null value) and explode_outer (use when column data having null value)
+            explode skip entire dataframe data when get any null field in column while explode_outer is not do this thing...
+
+
+	Syntax:
+	  - json_df.select('*', explode('column_on_chenge_type').alias('alter_name')).printSchema()
+
+
+	ex :
+	  - json_df1 = json_df.select('*', explode('restaurants').alias('new_restaurants')).drop('restaurants')\
+                 	      .select('*',
+                          	      'new_restaurants.restaurant.R.res_id',
+                          	      explode_outer('new_restaurants.restaurant.establishment_types').alias('restaurant_estiblished'),
+                          	      'new_restaurants.restaurant.cuisines',
+                          	      'new_restaurants.restaurant.location.address',
+                          	      'new_restaurants.restaurant.location.city',
+                          	      'new_restaurants.restaurant.name'
+                              ).select('*',
+                           	       explode_outer('new_restaurants.restaurant.offers').alias('cuisines_offers')
+                              )
+
+	   json_df1 = json_df1.drop('new_restaurants')                    
+           json_df1.printSchema()
+

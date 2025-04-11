@@ -1,0 +1,60 @@
+# Read and Work JDBC Dataframe :
+	About JDBC :
+	  -  Jdbc library used for established the connection and read and write the data into the database in form of the dataframe.
+
+
+	Syntax:
+	  - df = sparksession.read.format('jdbc').option('server_connection').option('add_option_so_on').load()
+          - df.write.format('jdbc').option('server_connection').option('add_option_so_on').save()
+	  
+		             
+
+	ex :
+	  - jdbcDF = spark.read \
+    			  .format("jdbc") \
+    			  .option("url", "jdbc:postgresql:dbserver") \
+		          .option("dbtable", "schema.tablename") \
+		          .option("user", "username") \
+		          .option("password", "password") \
+		          .load()
+	
+	  - jdbcDF2 = spark.read \
+    			   .jdbc("jdbc:postgresql:dbserver", "schema.tablename", properties={"user": "username", "password": "password"})
+
+	
+	  - # Specifying dataframe column data types on read
+	    jdbcDF3 = spark.read \
+    			   .format("jdbc") \
+		           .option("url", "jdbc:postgresql:dbserver") \
+			   .option("dbtable", "schema.tablename") \
+    			   .option("user", "username") \
+			   .option("password", "password") \
+			   .option("customSchema", "id DECIMAL(38, 0), name STRING") \
+			   .load()
+
+	  - # Saving data to a JDBC source
+	    jdbcDF.write \
+    		  .format("jdbc") \
+		  .option("url", "jdbc:postgresql:dbserver") \
+ 	          .option("dbtable", "schema.tablename") \
+	          .option("user", "username") \
+	          .option("password", "password") \
+		  .save()
+
+	  - jdbcDF2.write \
+    		   .jdbc("jdbc:postgresql:dbserver", "schema.tablename", properties={"user": "username", "password": "password"})
+
+
+	  - # Specifying create table column data types on write
+	    jdbcDF.write \
+	          .option("createTableColumnTypes", "name CHAR(64), comments VARCHAR(1024)") \
+		  .jdbc("jdbc:postgresql:dbserver", "schema.tablename", properties={"user": "username", "password": "password"})
+	
+
+
+	Reference parquet link :
+          - https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html
+	  - https://medium.com/@suffyan.asad1/writing-to-databases-using-jdbc-in-apache-spark-9a0eb2ce1a
+
+
+

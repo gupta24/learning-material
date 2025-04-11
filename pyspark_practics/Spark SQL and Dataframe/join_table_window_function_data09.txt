@@ -1,0 +1,50 @@
+
+# Join in Dataframe :
+	disc : 
+	- join are used to combine two of more table data based the common column in both table.
+	  there are different types of joins like -
+ 		inner join, left join, right join, (outer) full outer join,
+	        left semi join, left anti join, cross join etc.
+
+	Syntax:
+	  - df1.join(df2, 'matching_condition', 'matching_type')
+
+	ex :
+	  - cust_df.join(sales_df, cust_df.customer_id == sales_df.customer_id, 'inner')    # use inner join return common records
+	  - cust_df.join(sales_df, cust_df.customer_id == sales_df.customer_id, 'left')	    # use left join return common and non-match left record
+	  - sales_df.join(prod_df, sales_df.product_id == prod_df.id, 'right')		    # use right join return common and non-match right record
+	  - cust_df.join(sales_df, cust_df.customer_id == sales_df.customer_id, 'outer')    # use outer join return either match or not-match records
+	  - cust_df.join(sales_df, cust_df.customer_id == sales_df.customer_id, 'left_semi')    # use left semi join return matches left records
+	  - cust_df.join(sales_df, cust_df.customer_id == sales_df.customer_id, 'left_anti')# use left anti join return non-matches left records
+	  - cust_df.crossJoin(sales_df)							    # use cross join return all records with Cartesian prod.
+
+
+ 
+
+# Window function in Dataframe :
+	disc : 
+	- window function are the function which applied on the set of record to assign the values for each and every records.
+	  some of the window function are ;
+	  	row_number, rank, dense_rank, lead, leg, first, last, nth etc.
+	- window function can be used using withColumn or select statements.
+ 
+
+	Syntax:
+	  - df.withColumn('new_column_name', 'use_window/aggregation_func.over(Window.partitionBy/orderBy('column_on_window_func_apply')))
+	  - df.select('column_name1','column_name2', 'column_name3', 'use_window/aggregation_func'.over(
+								Windows.partitionBy/orderBy('column_on_window_func_apply').alias('alter_name')))
+
+
+
+	ex :
+	  - from pyspark.sql.window import Window
+	    df.withColumn('row_number', row_number().over(Window.partitionBy/orderBy('dept')))
+	  - df.select('id', 'name', 'salary', 'dept', sum('salary').over(Windows.partitionBy('dept').alias('tot_sal_per_dept'))
+
+
+
+
+
+
+
+

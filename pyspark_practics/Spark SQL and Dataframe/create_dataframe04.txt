@@ -1,0 +1,167 @@
+# Create Dataframe :
+	Overview :
+	  -  Create DataFrame that will be an 2D table which constructs using rows and columns.
+	  -     read -------> transform -----------> write ----> (used by Business Analyst/Data Scientist)
+				/  \
+	            use dataframe   use spark
+		           API       Sql
+
+
+	Syntax :
+	  - spark.createDataFrame('data_list', 'schema_list')
+
+
+	ex :
+	  - data = [(1, 1), (2, 1), (3, 1), (4, 2), (5, 1), (6, 2), (7, 2)]
+	    schema = ["id", "num"]
+
+	    # creare dataframe..
+ 	    df = spark.createDataFrame(data, schema)
+	    df.show()
+
+
+
+
+# Create Schema :
+	Overview :
+	  - schema is create by combination of column name and column type
+	  - like column names are ('id', 'name'..) and column types are ('integer', 'string')
+
+	Syntax :
+	  - schema_list = schemaType([schemaField1('col_name1', 'col_type', true/false), schemaField2('col_name2', 'col_type', true/false), ...])
+	  - spark.createDataFrame('data_list', 'schema_list')
+
+
+	ex :
+	  - from pyspark.sql.types import IntergerType, StringType, StructType, StructField
+	    data = [(1, 1), (2, 1), (3, 1), (4, 2), (5, 1), (6, 2), (7, 2)]
+	    schema = StructType([StructField('id', IntegerType(), True), StructField('value', StringType(), True])
+
+	    # creare dataframe..
+ 	    df = spark.createDataFrame(data, schema)
+	    df.show()
+
+
+
+# Different Column Selection :
+	Overview :
+	  - Select the column from the existing dataframe in multiple ways.. like using column name, using col keyword or using name of dataframe.
+	
+	Syntax :
+	  - df.select('column_name1')
+	  - df.select(col('column_name1'))
+	  - df.select(df['column_name1'])
+	  - df.select(df.column_name1)
+
+
+	ex :
+	  - from pyspark.sql.types import IntergerType, StringType, StructType, StructField
+            from pysprl.sql.function import col, when
+	    data = [(1, 1), (2, 1), (3, 1), (4, 2), (5, 1), (6, 2), (7, 2)]
+	    schema = StructType([StructField('id', IntegerType(), True), StructField('value', StringType(), True])
+
+	    # creare dataframe..
+ 	    df = spark.createDataFrame(data, schema)
+	    df.select('id')
+	    df.select(col('id'))
+	    df.select(df['id'])
+	    df.select(df.id)
+
+
+
+
+# About Alias :
+	Overview :
+	  - alias are used for give the alternative name for data frame or column name..
+	    alias and renameWithColume are used for changes column name.
+
+	Syntax :
+	  - df.alias('temporary_name')
+	  - df.select('col_name'.alias('temporary_name'))
+
+
+	ex :
+	  - df.alise('df1')  				# alias data frame from df to df1
+	  - df.select('id'.alias('emp_id'), 'name')     # alias the column name from id to emp_id 
+
+
+
+# About Filter/Where :
+	Overview :
+	  - filter and where clause are used for select only those record which match the specific condition.    
+
+	Syntax :
+	  - df.filter('condition_expression').show()
+
+
+	ex :
+	  - df.filter(col('salary') > 20000).show()
+	  - df.where((col('salary') > 20000) & (col('age') < 35)).show()
+
+
+
+
+# About Literal :
+	Overview :
+	  - literal are used for create new column with default value in existing data frame.
+          - it is create using 'lit' keyword which is useful for content column create while 'expr' is used as more powerful method.
+
+	Syntax :
+	  - df.select(lit('default_value').alias('new_column_name'))
+
+
+	ex :
+	  - df.select('*', lit('1').alias('active_is')).show()
+	 
+
+
+
+# About Adding Columns :
+	Overview :
+	  - we can add or overwrite the column in exising data frame..
+	  - withColumn keyword is use for add or overwrite column
+
+	Syntax :
+	  - df.withColumn('column_name')
+
+	ex :
+	  - df.withColumn('last_name', lit('kumar'))  				
+
+
+
+# About Renaming Columns :
+	Overview :
+	  - withRenameColumn is used for rename the existing column.
+
+	Syntax :
+	  - df.withColumnRenamed('old_name', 'new_col_new')
+
+	ex :
+	  - df.withColumnRenamed('id', 'emp_id')
+	 
+
+
+# About Casting Data Type :
+	Overview :
+	  - casting the column datatype with new type in existing data frame..
+
+	Syntax :
+	  - df.withColumn('column_name', col('column_name').cast('new_type')).printSchema()
+
+	ex :
+	  - df.withColumn('salary', col('salary').cast('long')).printSchema()
+
+
+
+# About Removing Columns :
+	Overview :
+	  - remove the existing column in dataframe..
+
+	Syntax :
+	  - df.drop('column_name1', 'column_name2', ...).show()  
+
+	ex :
+	  - df.drop('sur_name').show()
+
+
+

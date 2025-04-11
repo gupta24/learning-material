@@ -1,0 +1,53 @@
+# When-Otherwise in Data frame :
+	Disc :
+	  - when otherwise is used as if-else condition in spark data frame.
+	    it is used to set or create column with values based on the one or more conditions..
+		
+	Syntax:
+	  - from pyspark.sql import functions as F
+	    df.withColumn("new_column", F.when(condition, value).otherwise(otherwise_value))
+	  - df.select("new_column", F.when(condition, value).otherwise(otherwise_value))
+
+
+	Ex :
+          - dataframe.withColumn("new_gender", when(dataframe.gender == "M","Male")
+                                              .when(dataframe.gender == "F","Female")
+                                              .when(dataframe.gender.isNull() ,"")
+                                              .otherwise(dataframe.gender)).show()
+
+	  - dataframe.select(col("*"), when(dataframe.gender == "M","Male")
+                                      .when(dataframe.gender == "F","Female")
+                                      .when(dataframe.gender.isNull() ,"")
+                                      .otherwise(dataframe.gender).alias("new_gender")).show()
+
+
+
+
+# Case-When in Spark SQL :
+	Disc :
+	  - Case when is similar to when otherwise but it is used in spark sql for set the conditions..
+		
+	Syntax:
+	  - sparksql(
+		      select *,
+		      case
+			when condition1 then value1
+			when condition2 then value2
+			else default_value
+		      end as new_column_name
+		      from table_name
+		    )
+
+
+	Ex :
+	  - spark.sql("""
+			select *,
+			case
+			   when gender == "M" then "Male",
+			   when gender == "F" then "Female",
+                           when gender == None then ""
+			   else gender
+			end as new_gender
+			from employee_table
+		      """).show()
+

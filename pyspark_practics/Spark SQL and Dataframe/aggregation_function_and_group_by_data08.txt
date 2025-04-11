@@ -1,0 +1,60 @@
+# aggregation function disc : 
+	- aggregation function use for operation on collection of records and return the result. these functions works on the numeric columns 
+	  where some function are ; 
+	  - count, min, max, avg, sum
+
+
+
+# Count on DataFrame :
+	disc :
+	  - all function in spark work as action/transformation but count work as both action and transformation in different way.
+	                     count
+                            /     \
+	              action      transformation
+              ex : df.count()     df.select(count('column_name'))
+        
+          - in single column use with count in transformation, it will ignore the null value while in multiple column it will count
+	    the null also.
+
+
+	Syntax:
+	  - df.count()
+	  - df.select(count('column_name')).show()
+	  - df.select(count('all_column_name_or_use_astric')).show()
+
+
+	ex :
+	  - df.count()				# use count as action and find total no of records based on entire column
+	  - df.select(count('name')).show()	# use count as transformer and find total no of count base on single column
+	  - df.select(count('*')).show()	# use count as transformer and find total no of count base on entire column
+
+
+
+# Other Aggregation function on DataFrame :
+	Syntax:
+	  - df.select(sum('column_name'), avg('column_name'), min('column_name'), max('column_name'))
+
+	ex :
+	  - df.select(sum('column_name'), avg('column_name'), min('column_name'), max('column_name'))
+
+										# find sum, avg, min and max on numeric column
+
+
+
+
+# group by on DataFrame :
+	disc :
+	  - group by statement use for collecting/grouping the similar records and make aggregation function oprations on that group. 
+            then return the single record from each group as result if use aggregation function otherwise return single record from
+	    top group; 
+
+	Syntax:
+	  - df.groupBy('column_name_on_which_applied_group_by').agg('use_aggregation_function_on_column').show()
+
+
+	ex :
+	  - df.groupBy('dept').agg(sum('salary').alias('total_sal_per_dept')).show()      # get the total salary per department wise..
+
+
+
+

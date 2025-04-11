@@ -1,0 +1,81 @@
+# Read and Work Parquet in Dataframe :
+	About Parquet :
+	  -  parquet is the file format similar to the csv, json and text. And it is structured,  binary formed and columnar based file format.
+	     * Data organization in parquet.
+		File
+		|-->Row group (we have metadata at group level also)
+	          |-->Column
+	            |-->Page
+		      |-->Metadata
+			|-->min
+			|-->max
+			|-->count
+		
+	     * parquet use different compression and encoding technique.
+	        Compression : ('GZIP', 'Snappy', 'LZO' )
+	        Encoding : ('PLAIN DICTIOARY', 'RLE', 'BIT PACKED')
+
+
+	  -  data divide into two file format;
+		- row based file format like (contain each row data in memory ex; 1st full row, 2nd full row and so on...). In this format 
+  		  csv, text, json and other format used.
+		- columnar based file format like (contain each column data entirely in memory ex; 1st full column, 2nd full column data so
+		  on..). In this format parquet file is used.
+		- hybrid based file format like (contain each column data and row data in specific size ex;  1st chunk from full column, 2nd 
+		  chunk column from full column, ..., 2nd chunk of 1st full column, 2nd chunk of 2nd column, so on....) This format also 
+		  used by parquet.
+
+	  -  in Spark, there are two types of processing..
+	     1. OLAP (online analytical processing ) : only use columnar data and it is use for analytics purpose so there are useful parquet
+						       file format.
+	     2. OLTP (online transaction processing ) : only use the row based data because it is use very insert, update and delete operation
+							so there are useful csv or json type file format.
+
+	  - parquet file is not open directly on disk, so check the data of parquet file on disk use the some terminal commands...
+	    Download parquet tools in your local to run all the below commands.
+	    	Parquet tools can be downloaded using pip command.
+		Run the below command in cmd or terminal
+		pip install parquet-tools
+
+		Run the blow command inside python
+		import pyarrow as pa
+		import pyarrow.parquet as pq
+
+		parquet_file = pq.ParquetFile(r'C:\Users\nikita\Downloads\Spark-The-Definitive-Guide-master\data\flight-data\parquet\2010-
+		summary.parquet\part-r-00000-1a9822ba-b8fb-4d8e-844a-ea30d0801b9e.gz.parquet')
+		parquet_file.metadata
+		parquet_file.metadata.row_group(0) 
+		parquet_file.metadata.row_group(0).column(0)
+		parquet_file.metadata.row_group(0).column(0).statistics 
+
+		Run the below command in cmd/terminal
+		parquet-tools show  C:\Users\manish\Downloads\Spark-The-Definitive-Guide-master\data\flight-data\parquet\2010-summary.parquet
+		\part-r-00000-1a9822ba-b8fb-4d8e-844a-ea30d0801b9e.gz.parquet
+		parquet-tools inspect  (path of your file location as above)
+
+	    
+
+	  
+
+	Syntax:
+          - sparksession.write.parquet(path/file_name)
+	  - sparksession.read.parquet(path/file_name)
+		             
+
+	ex :
+	  - spark.write.parquet("c:\user\download\data")
+	  - spark.read.parquet("c:\user\download\data.parquet")
+	
+
+
+	Reference parquet link :
+	  - https://parquet.apache.org/docs/file-format/metadata/
+	  - https://medium.com/@siladityaghosh/understanding-the-parquet-file-format-a-comprehensive-guide-b06d2c4333db
+	  - https://learncsdesigns.medium.com/understanding-apache-parquet-d722645cfe74
+	  - https://medium.com/@arpit2188/understanding-parquet-file-format-d017e0375900
+	  - https://medium.com/data-engineering-with-dremio/all-about-parquet-part-04-schema-evolution-in-parquet-c2c2b1aa6141
+
+
+
+
+

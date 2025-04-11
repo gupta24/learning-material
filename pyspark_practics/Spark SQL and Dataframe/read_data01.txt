@@ -1,0 +1,189 @@
+# Read CSV in Dataframe :
+	Syntax:
+	  - sparksession.read.format(---)\
+		             .option("key", "value")\
+		             .schema(----)\
+		             .load(---)
+
+	
+        disc : 
+	  - format(optional) => data file format like (csv, json, jdbc/odbc, Table, parquet{default if not use format})
+	  - option(optional) => like (inferschema, mode, header)
+	  - schema(optional) => manual schema can pass
+	  - load	     => path where our data is located
+
+
+
+	ex :
+	  - spark.read.format("csv")\
+		      .option("header", "true")\
+		      .option("inferschema", "true")\
+		      .option("mode", "FAILFAST")\
+		      .load("c:\user\download\data.csv")
+
+
+	About mode option :
+	  - Failfast : fail the execution if any malformed record found in dataset
+	  - Dropmalformed : drop the corrupted record
+	  - Permissive : default set to null value in all corrupted field
+
+
+
+
+
+# Create dataframe Schema :
+	There are two ways to create the schema;
+	  - By using Struct Type and Struct Field  (imported from pyspark.sql.types)
+	  - by using DDL (data definition language)
+
+	
+	Ex:
+	  - struct_type_field_schema = StructType([
+						 StructField("id", IntegerType(), True),
+						 StructField("name", Stringtype(), True),
+						 StructField("age", IntegerType(), True)
+						])
+
+	  - ddl_schema = "id int, name string, age int"
+
+	  - spark.read.format("csv")\
+		      .option("header", "true")\
+		      .option("keyField", 1)\
+		      .option("inferschema", "false")\
+		      .option("mode", "PERMISSIVE")\
+		      .schema(struct_type_field_schema)\
+		      .load("c:\user\download\data.csv")
+
+
+
+
+# Read JSON in Dataframe :
+	Syntax:
+	  - sparksession.read.format(---)\
+		             .option("key", "value")\
+		             .schema(----)\
+		             .load(---)
+
+        Ex:
+	  - # read the line delimiter json
+            line_delimited_json : {"name":"Manish","age":20,"salary":20000},
+		   		  {"name":"Nikita","age":25,"salary":21000}
+
+	    line_delimiter_df = spark.read.format('json')\
+                              		  .option('header', 'true')\
+                              		  .option('mode', 'PERMISSIVE')\
+                               		  .load('/FileStore/tables/line_delimited_json.json').show()
+
+          
+
+          - # read the line delimeter data with extra filed
+            line_delimiter_json_with_extra_field : {"name":"Manish","age":20,"salary":20000},
+		   		  		   {"name":"Nikita","age":25,"salary":21000, "sex": F}
+	    
+	    line_delimiter_json_with_extra_field_df = spark.read.format('json')\
+                              					.option('header', 'true')\
+                              					.option('mode', 'PERMISSIVE')\
+                              					.load('/FileStore/tables/single_file_json_with_extra_fields.json').show()
+
+
+
+	  - # read the line delimeter corrupted dat
+            corrupted_json : {"name":"Manish","age":20,"salary":20000},
+		   	     {"name":"Nikita","age":25,"salary":21000
+
+	    corrupted_json_df = spark.read.format('json')\
+                              		  .option('header', 'true')\
+                              		  .option('mode', 'PERMISSIVE')\
+                              		  .load('/FileStore/tables/corrupted_json.json').show()
+
+
+
+	  - # read the multiline correct data
+            multiline_correct_json : [{
+				    	"name":"Manish",
+				    	"age":20,
+				    	"salary":20000
+				      },
+		   		      {
+				        "name":"Nikita",
+                                        "age":25,
+                                        "salary":21000
+				      }]
+
+	    multiline_correct_json_df = spark.read.format('json')\
+                              			  .option('header', 'true')\
+		                                  .option('multiline', 'true')\
+                                                  .option('mode', 'PERMISSIVE')\
+                              			  .load('/FileStore/tables/Multi_line_correct.json').show()
+
+
+
+	 - # read the multiline incorrect data
+	   multiline_incorrect_json : {
+				    	"name":"Manish",
+				    	"age":20,
+				    	"salary":20000
+				      },
+		   		      {
+				        "name":"Nikita",
+                                        "age":25,
+                                        "salary":21000
+				      }
+
+	   multiline_incorrect_json_df = spark.read.format('json')\
+                              			   .option('header', 'true')\
+		                                   .option('multiline', 'true')\
+                     			           .option('mode', 'PERMISSIVE')\
+		                                   .load('/FileStore/tables/Multi_line_incorrect.json').show()
+
+
+
+	 - # read the multiline nested file data
+	   multiline_nested_json : 
+				 [
+                                   {
+       					 "id": 1,
+       					 "name": "John",
+       					 "address": {
+           						 "city": "New York",
+           						 "state": "NY"
+        					    },
+        				"phone_numbers": [
+            						    {"type": "home", "number": "123-456-7890"},
+           						    {"type": "work", "number": "987-654-3210"}
+        						]
+    				   }
+				 ]
+
+	   multiline_nested_json_df = spark.read.format('json')\
+                              			.option('header', 'true')\
+                              			.option('multiline', 'true')\
+                              			.option('mode', 'PERMISSIVE')\
+                              			.load('/FileStore/tables/multiline_nested_json.json').show(truncate = False)
+
+	   output : 
+                  -------------------+---+----+--------------------------------------------+
+                 |address            |id |name|phone_numbers                               |
+                 +-------------------+---+----+--------------------------------------------+
+		 |{New York, NY}     |1  |John|[{123-456-7890, home}, {987-654-3210, work}]|
+		 |{San Francisco, CA}|2  |Jane|[{555-1234, mobile}, {777-4321, work}]      |
+		 +-------------------+---+----+--------------------------------------------+
+
+	   schema :
+			root
+ 			  |-- address: struct (nullable = true)
+                          |    |-- city: string (nullable = true)
+ 			  |    |-- state: string (nullable = true)
+ 			  |-- id: long (nullable = true)
+ 			  |-- name: string (nullable = true)
+ 			  |-- phone_numbers: array (nullable = true)
+ 			  |    |-- element: struct (containsNull = true)
+ 			  |    |    |-- number: string (nullable = true)
+ 			  |    |    |-- type: string (nullable = true)
+
+
+
+
+
+
+

@@ -1,0 +1,62 @@
+# Union vs Union All :
+	Desc :
+	  - The PySpark union() and unionAll() transformations are being used to merge the two or more DataFrame's of the same
+	    schema or the structure. The union() function eliminates the duplicates but unionAll() function merges the /two datasets
+	    including the duplicate records in other SQL languages. While union and unionAll are return same result with duplicate value
+	    in pyspark.
+   
+
+
+# Union the Dataframe And SQL :
+	Syntax:
+	  - first_dataframe.union(second_dataframe).show()
+          - sparksql(
+		      first_table
+		       union
+		      second_table
+		    )
+
+	ex :
+	  - df1.union(df2).show()
+	  - df1.createOrReplaceTempView('df1_tbl')
+	    df2.createOrReplaceTempView('df2_tbl')
+	    spark.sql("""
+          		select * from df1_tbl 
+          		union
+          		select * from df2_tbl
+          	      """).show()
+
+
+
+# UnionAll the Dataframe And SQL :
+	Syntax:
+	  - first_dataframe.unionAll(second_dataframe).show()
+          - sparksql(
+		      first_table
+		       union all
+		      second_table
+		    )
+
+	ex :
+	  - df1.unionAll(df2).show()
+	  - df1.createOrReplaceTempView('df1_tbl')
+	    df2.createOrReplaceTempView('df2_tbl')
+	    spark.sql("""
+          		select * from df1_tbl 
+          		unionall
+          		select * from df2_tbl
+          	      """).show()
+
+
+
+# Union With Suffle (Unpossitioned ) Column Name Data Frame :
+	Syntax:
+	  - first_dataframe.union(third_dataframe).show()
+          - first_dataframe.unionByName(third_dataframe).show()  
+
+	ex :
+	  - df1.union(df3).show()              # third df is un-position column name
+	  - df1.unionByName(df3).show()        # third df is un-position column name but check with similar name.
+
+
+	
